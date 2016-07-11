@@ -17,9 +17,9 @@ my $usage = "
 fasta2nuccomp.pl - get nuccomp from fasta file.
 		      by
 		Brian J. Knaus
-		  April 2012
+		  April 2016
 
-Copyright (c) 2012 Brian J. Knaus.
+Copyright (c) 2016 Brian J. Knaus.
 License is hereby granted for personal, academic, and non-profit use.
 Commercial users should contact the author (http://brianknaus.com).
 
