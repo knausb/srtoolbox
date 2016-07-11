@@ -156,7 +156,9 @@ sub ptext{
   print $out "Name,Length,AT,GC,IUPAC_polymorphic,N,Other\n";
   for($i = 0; $i<=$#len; $i++){
 #    print "$names[$i]\n";
-    print $out "$names[$i],$len[$i],$at[$i],$gc[$i],$poly[$i],$n[$i],$other[$i]\n";
+#    print $out "$names[$i],$len[$i],$at[$i],$gc[$i],$poly[$i],$n[$i],$other[$i]\n";
+    print $out join(",", $names[$i], $len[$i], $at[$i], $gc[$i],
+                    $poly[$i],$n[$i],$other[$i])."\n";
   }
 
 #  print $out join(",",@len)."\n";
@@ -175,28 +177,30 @@ sub plot{
   my $out;
   open($out, ">", $outf) or die "Can't open $outf: $!";
   print $out "x <- read.table('".$inf."',sep=',',header=T)\n";
+  print $out "lens <- sort(x[,'Length'], decreasing=T)\n";
+  print $out "n50 <- lens[cumsum(as.numeric(lens)) >= sum(as.numeric(lens))/2][1]\n";
 #  print $out "x <- read.table('".$inf."',sep=',',skip=1)\n";
-  print $out "png('".$png."',width=800,height=800)\n";
+  print $out "png('".$png."',width=800,height=800, pointsize=18)\n";
   print $out "par(mfrow=c(3,2))\n";
 
   print $out "hist(as.numeric(x[,2]),main='Length',xlab='')\n";
-  print $out "legend('topright',c(paste(sum(as.numeric(x[,2]))),'Nucleotides'),bty='n')\n";
+  print $out "legend('topright', c(paste( format(sum(as.numeric(x[,2])), big.mark=',')),'Nucleotides', paste('N50:', format(n50, big.mark=',')), paste('Min:', min(lens))),bty='n')\n";
 #  print $out "legend('topright',c( paste(length(x[,2]),'sequences'), paste(sum(x[,2]),nucleotides)\n";
 
   print $out "hist(as.numeric(x[,3])/as.numeric(x[,2]),main='A/T',xlab='',xlim=c(0,1))\n";
-  print $out "legend('topright',c(paste(sum(as.numeric(x[,2]))),'Nucleotides'),bty='n')\n";
+  print $out "legend('topright',c(paste( format(sum(as.numeric(x[,3])), big.mark=',')),'Nucleotides'),bty='n')\n";
 
   print $out "hist(as.numeric(x[,5])/as.numeric(x[,2]),main='IUPAC polymorphic',xlab='',xlim=c(0,1))\n";
-  print $out "legend('topright',c(paste(sum(as.numeric(x[,5]))),'Nucleotides'),bty='n')\n";
+  print $out "legend('topright',c(paste( format(sum(as.numeric(x[,5])), big.mark=',')),'Nucleotides'),bty='n')\n";
 
   print $out "hist(as.numeric(x[,4])/as.numeric(x[,2]),main='G/C',xlab='',xlim=c(0,1))\n";
-  print $out "legend('topright',c(paste(sum(as.numeric(x[,4]))),'Nucleotides'),bty='n')\n";
+  print $out "legend('topright',c(paste( format(sum(as.numeric(x[,4])), big.mark=',')),'Nucleotides'),bty='n')\n";
 
   print $out "hist(as.numeric(x[,6])/as.numeric(x[,2]),main='Ns',xlab='',xlim=c(0,1))\n";
-  print $out "legend('topright',c(paste(sum(as.numeric(x[,6]))),'Nucleotides'),bty='n')\n";
+  print $out "legend('topright',c(paste( format(sum(as.numeric(x[,6])), big.mark=',')),'Nucleotides'),bty='n')\n";
 
   print $out "hist(as.numeric(x[,7])/as.numeric(x[,2]),main='Other',xlab='',xlim=c(0,1))\n";
-  print $out "legend('topright',c(paste(sum(as.numeric(x[,7]))),'Nucleotides'),bty='n')\n";
+  print $out "legend('topright',c(paste( format(sum(as.numeric(x[,7])), big.mark=',')),'Nucleotides'),bty='n')\n";
 
   print $out "dev.off()\n";
   close $out or die "$out: $!";
